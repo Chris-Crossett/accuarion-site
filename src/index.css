@@ -1,0 +1,136 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-obsidian-900 text-ink-primary font-sans antialiased;
+    font-feature-settings: "ss01", "cv11";
+  }
+  ::selection {
+    @apply bg-spectrum-500/40 text-ink-primary;
+  }
+}
+
+@layer components {
+  /* Container with consistent gutters + max width */
+  .container-accu {
+    @apply mx-auto max-w-6xl px-6 sm:px-10 lg:px-12;
+  }
+
+  /* Headlines use Fraunces — high-contrast editorial serif */
+  .hl-xl {
+    @apply font-display font-normal tracking-tightest;
+    font-variation-settings: "opsz" 144;
+    font-size: clamp(2.5rem, 7vw, 5.25rem);
+    line-height: 0.98;
+  }
+  .hl-lg {
+    @apply font-display font-normal tracking-tighter;
+    font-variation-settings: "opsz" 96;
+    font-size: clamp(2rem, 4.5vw, 3.5rem);
+    line-height: 1.05;
+  }
+  .hl-md {
+    @apply font-display font-normal tracking-tight;
+    font-variation-settings: "opsz" 48;
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    line-height: 1.15;
+  }
+
+  .eyebrow {
+    @apply font-mono text-xs uppercase tracking-[0.18em] text-ink-tertiary;
+  }
+
+  .body-lg {
+    @apply text-lg text-ink-secondary leading-relaxed;
+  }
+
+  /* Gradient underline text accent */
+  .grad-text {
+    background: linear-gradient(135deg, #4F7DFF 0%, #93B4FF 45%, #E8B04C 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Subtle grain overlay — pure SVG noise inline */
+  .grain-overlay::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.08;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' /></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.6'/></svg>");
+  }
+
+  /* Aurora backdrop blobs */
+  .aurora-blob {
+    @apply absolute rounded-full blur-3xl pointer-events-none;
+    mix-blend-mode: screen;
+  }
+
+  /* Ghost button */
+  .btn-ghost {
+    @apply inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-ink-primary border border-white/15 rounded-full transition hover:border-white/40 hover:bg-white/5;
+  }
+
+  /* Primary button — gradient stroke */
+  .btn-primary {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: #0A0A0F;
+    background: linear-gradient(135deg, #93B4FF 0%, #E8B04C 100%);
+    border-radius: 9999px;
+    transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s;
+  }
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 40px -10px rgba(147, 180, 255, 0.5);
+  }
+
+  .card-gradient-border {
+    position: relative;
+    border-radius: 1rem;
+    background: #11111A;
+  }
+  .card-gradient-border::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(79,125,255,0.4), rgba(232,176,76,0.15) 60%, rgba(255,255,255,0.04) 100%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* Stagger reveal on load */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    animation: fadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+}
+
+/* Marquee-style horizontal ticker (for the "powered by" strip) */
+.marquee {
+  display: flex;
+  width: 200%;
+  animation: ticker 40s linear infinite;
+}
+.marquee:hover {
+  animation-play-state: paused;
+}
