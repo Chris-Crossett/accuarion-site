@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 export default function Products() {
   return (
     <div className="pt-40 md:pt-48 pb-24">
@@ -9,107 +11,99 @@ export default function Products() {
             Two products. <span className="grad-text italic">Focused.</span>
           </h1>
           <p className="body-lg mt-8 max-w-xl reveal" style={{ animationDelay: '280ms' }}>
-            One for the business. One for the household. Both built on the same conviction: financial software should feel like it was made by someone who understands what the numbers mean.
+            One for the business. One for the household. Both built on the same conviction:
+            financial software should feel like it was made by someone who understands what
+            the numbers mean.
           </p>
         </div>
 
-        {/* ArcaERP */}
-        <div className="card-gradient-border p-8 md:p-14 mb-10">
-          <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-10">
-            <div>
-              <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-emerald-300 mb-3">
-                ● Live · Operating in Production
-              </div>
-              <h2 className="hl-lg mb-4">ArcaERP</h2>
-              <p className="text-ink-secondary max-w-xl">
-                A modern ERP for small and mid-sized businesses that actually respects accounting.
-              </p>
-            </div>
-            <a
-              href="https://arcaerp.com"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-primary self-start shrink-0"
-            >
-              arcaerp.com
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M7 17 17 7M8 7h9v9" strokeLinecap="round" strokeLinejoin="round" /></svg>
-            </a>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
-            <Feature title="Accounting">
-              Full double-entry GL, AR/AP, payroll, fixed assets, period close, consolidations, and 80+ financial reports.
-            </Feature>
-            <Feature title="Operations">
-              SCM, eCommerce adapters (Amazon, Shopify, WooCommerce, Etsy, eBay, Walmart), HCM, and CRM — one database, one security model.
-            </Feature>
-            <Feature title="Planning">
-              EPM for budgets, forecasts, and variance analysis. Workforce planning connected to live HR data. Driver-based models.
-            </Feature>
-            <Feature title="AI, embedded">
-              Anomaly detection on journal entries. Payroll anomaly alerts. AI review assistants. Attrition risk. Smart bank matching.
-            </Feature>
-          </div>
-
-          <div className="mt-10 pt-8 border-t border-white/5 flex flex-wrap gap-x-10 gap-y-3 text-sm text-ink-tertiary">
-            <span className="font-mono text-xs">14 modules</span>
-            <span className="font-mono text-xs">500+ endpoints</span>
-            <span className="font-mono text-xs">Multi-tenant</span>
-            <span className="font-mono text-xs">GCP-native</span>
-          </div>
+        {/* Product index */}
+        <div className="grid md:grid-cols-2 gap-6">
+          <ProductIndexCard
+            to="/products/arcaerp"
+            name="ArcaERP"
+            status="LIVE"
+            statusColor="live"
+            blurb="A modern ERP for SMBs that finally works like accounting is supposed to. Full GL, AR/AP, payroll, CRM, and analytics — with AI woven into reconciliation, forecasting, and reporting from day one."
+            stats={[
+              { n: '14', label: 'Modules' },
+              { n: '500+', label: 'Endpoints' },
+              { n: '84+', label: 'Reports' },
+            ]}
+            accentFrom="#4F7DFF"
+            accentTo="#93B4FF"
+          />
+          <ProductIndexCard
+            to="/products/arcatrust"
+            name="ArcaTrust"
+            status="COMING Q2 2026"
+            statusColor="soon"
+            blurb="A household finance platform you'd actually trust with your data. Envelope budgeting, Plaid-connected accounts, AI coaching, and an institutional tier for banks and credit unions."
+            stats={[
+              { n: '3', label: 'Tiers' },
+              { n: 'AES-256', label: 'Encryption' },
+              { n: 'Plaid', label: 'Connected' },
+            ]}
+            accentFrom="#E8B04C"
+            accentTo="#F5C97B"
+          />
         </div>
 
-        {/* ArcaTrust */}
-        <div className="card-gradient-border p-8 md:p-14">
-          <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-10">
-            <div>
-              <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-amber-accent mb-3">
-                ◐ Coming Q2 2026 · Pre-launch
-              </div>
-              <h2 className="hl-lg mb-4">ArcaTrust</h2>
-              <p className="text-ink-secondary max-w-xl">
-                Household finance software you'd actually trust with your data — plus an institutional tier for banks and credit unions.
-              </p>
-            </div>
-            <a
-              href="mailto:chris@accuarion.com?subject=ArcaTrust%20waitlist&body=Please%20add%20me%20to%20the%20ArcaTrust%20waitlist."
-              className="btn-primary self-start shrink-0"
-            >
-              Join the waitlist
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14m-6-6 6 6-6 6" strokeLinecap="round" strokeLinejoin="round" /></svg>
-            </a>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
-            <Feature title="For households">
-              Envelope budgeting, Plaid-linked accounts, AI financial coach, receipt OCR, bill pay hub, and a privacy-first posture.
-            </Feature>
-            <Feature title="For institutions">
-              White-label tier for community banks and credit unions. Co-branded member-facing budgeting with your data, your retention.
-            </Feature>
-            <Feature title="Built to trust">
-              AES-256-GCM at rest. Row-level security. Session timeout handling. Every design decision defaulted toward the member's interest.
-            </Feature>
-            <Feature title="AI where it matters">
-              Coaching grounded in the member's own ledger, not generic advice. Anomaly alerts on unexpected spending. Forecasting cashflow drift before it's a problem.
-            </Feature>
-          </div>
-
-          <div className="mt-10 pt-8 border-t border-white/5 flex flex-wrap gap-x-10 gap-y-3 text-sm text-ink-tertiary">
-            <span className="font-mono text-xs">Community · Professional · Enterprise tiers</span>
-            <span className="font-mono text-xs">Plaid-certified</span>
-          </div>
+        {/* Bottom philosophy strip */}
+        <div className="mt-20 pt-16 border-t border-white/10 max-w-2xl">
+          <div className="eyebrow mb-4">Two products. One philosophy.</div>
+          <p className="text-ink-secondary leading-relaxed">
+            ArcaERP runs a business. ArcaTrust runs a household. Both are built on the same
+            principle — financial software should be designed by people who've actually worked
+            with the numbers, not by people who learned accounting from a tutorial.
+          </p>
         </div>
       </div>
     </div>
   )
 }
 
-function Feature({ title, children }) {
+function ProductIndexCard({ to, name, status, statusColor, blurb, stats, accentFrom, accentTo }) {
+  const statusClass =
+    statusColor === 'live'
+      ? 'bg-emerald-400/10 text-emerald-300 border-emerald-400/20'
+      : 'bg-amber-accent/10 text-amber-accent border-amber-accent/30'
+
   return (
-    <div>
-      <h4 className="font-display text-lg tracking-tight mb-2 text-ink-primary">{title}</h4>
-      <p className="text-sm text-ink-secondary leading-relaxed">{children}</p>
-    </div>
+    <Link
+      to={to}
+      className="card-gradient-border p-8 md:p-10 group block transition-transform duration-300 hover:-translate-y-1"
+    >
+      <div className="flex items-center justify-between mb-8">
+        <h3 className="font-display text-3xl tracking-tight">{name}</h3>
+        <span className={`font-mono text-[10px] uppercase tracking-[0.16em] px-2.5 py-1 rounded-full border ${statusClass}`}>
+          {status}
+        </span>
+      </div>
+
+      <div
+        className="h-0.5 w-16 mb-8 rounded-full"
+        style={{ background: `linear-gradient(90deg, ${accentFrom} 0%, ${accentTo} 100%)` }}
+      />
+
+      <p className="text-ink-secondary leading-relaxed mb-10">{blurb}</p>
+
+      {/* Stat strip */}
+      <div className="grid grid-cols-3 gap-4 mb-10 pb-10 border-b border-white/5">
+        {stats.map((s) => (
+          <div key={s.label}>
+            <div className="font-display text-xl text-ink-primary tracking-tight mb-1">{s.n}</div>
+            <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-ink-tertiary">{s.label}</div>
+          </div>
+        ))}
+      </div>
+
+      <div className="inline-flex items-center gap-2 text-sm font-medium text-ink-primary border-b border-white/20 pb-0.5 group-hover:border-white/60 transition">
+        Explore {name}
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="transition-transform group-hover:translate-x-0.5">
+          <path d="M5 12h14m-6-6 6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </div>
+    </Link>
   )
 }
