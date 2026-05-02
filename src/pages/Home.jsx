@@ -97,7 +97,7 @@ export default function Home() {
               statusColor="soon"
               blurb="A household finance platform you'd actually trust with your data. Envelope budgeting, Plaid-connected accounts, AI coaching, and an institutional tier for banks and credit unions."
               cta="Join the waitlist"
-              href="mailto:hello@accuarion.com?subject=ArcaTrust%20waitlist&body=Please%20add%20me%20to%20the%20ArcaTrust%20waitlist."
+              href="mailto:chris@accuarion.com?subject=ArcaTrust%20waitlist&body=Please%20add%20me%20to%20the%20ArcaTrust%20waitlist."
               accentFrom="#E8B04C"
               accentTo="#F5C97B"
             />

@@ -72,7 +72,7 @@ export default function Products() {
               </p>
             </div>
             <a
-              href="mailto:hello@accuarion.com?subject=ArcaTrust%20waitlist&body=Please%20add%20me%20to%20the%20ArcaTrust%20waitlist."
+              href="mailto:chris@accuarion.com?subject=ArcaTrust%20waitlist&body=Please%20add%20me%20to%20the%20ArcaTrust%20waitlist."
               className="btn-primary self-start shrink-0"
             >
               Join the waitlist

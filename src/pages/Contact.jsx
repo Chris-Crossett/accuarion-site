@@ -15,8 +15,8 @@ export default function Contact() {
         <div className="grid md:grid-cols-3 gap-10 md:gap-16">
           <ContactCard
             label="General"
-            headline="hello@accuarion.com"
-            href="mailto:hello@accuarion.com"
+            headline="chris@accuarion.com"
+            href="mailto:chris@accuarion.com"
             hint="For most inquiries — partnerships, licensing, press."
           />
           <ContactCard
