@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { HashRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import App from './App.jsx'
 import Home from './pages/Home.jsx'
 import About from './pages/About.jsx'
@@ -10,11 +10,14 @@ import ArcaTrust from './pages/ArcaTrust.jsx'
 import Contact from './pages/Contact.jsx'
 import './index.css'
 
-// HashRouter keeps routing working on GitHub Pages without server config.
-// URLs will look like: accuarion.com/#/about
+// BrowserRouter gives us clean URLs (e.g. /products/arcaerp).
+// GitHub Pages doesn't natively support client-side routing, so we use a
+// 404.html redirect trick: any path that 404s gets rewritten with the
+// original path in a query string, then index.html decodes it back into
+// the URL via history.replaceState before React Router reads it.
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <HashRouter>
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />}>
           <Route index element={<Home />} />
@@ -25,6 +28,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="contact" element={<Contact />} />
         </Route>
       </Routes>
-    </HashRouter>
+    </BrowserRouter>
   </React.StrictMode>,
 )

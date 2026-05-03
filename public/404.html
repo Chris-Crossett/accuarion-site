@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Accuarion</title>
+    <script>
+      // SPA routing trick for GitHub Pages.
+      // When a user hits a deep link like accuarion.com/products/arcaerp directly,
+      // GitHub Pages serves this 404. We capture the intended path, encode it
+      // into a query string, and redirect to the root. The matching script in
+      // index.html decodes it back and hands control to React Router.
+      //
+      // segmentCount = 0 for accuarion.com (no project subpath).
+      // Bump it to 1 if the site ever moves to a /repo-name/ path.
+      var segmentCount = 0;
+      var l = window.location;
+      l.replace(
+        l.protocol + '//' + l.hostname + (l.port ? ':' + l.port : '') +
+        l.pathname.split('/').slice(0, 1 + segmentCount).join('/') + '/?/' +
+        l.pathname.slice(1).split('/').slice(segmentCount).join('/').replace(/&/g, '~and~') +
+        (l.search ? '&' + l.search.slice(1).replace(/&/g, '~and~') : '') +
+        l.hash
+      );
+    </script>
+  </head>
+  <body></body>
+</html>
