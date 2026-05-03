@@ -151,40 +151,53 @@ export default function ArcaTrust() {
       </section>
 
       {/* ============================================================ */}
-      {/* PRODUCT TOUR                                                   */}
+      {/* PRODUCT TOUR — Refined: realistic mockups w/ magazine captions */}
       {/* ============================================================ */}
       <section className="py-24">
         <div className="container-accu">
           <div className="mb-16 max-w-2xl">
-            <div className="eyebrow mb-4">Product tour</div>
+            <div className="eyebrow mb-4">Product tour · Annotated</div>
             <h2 className="hl-lg">A look <span className="italic">inside.</span></h2>
+            <p className="body-lg mt-6">Each frame, with a note on where the AI earns its keep.</p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            <Mockup
+          <div className="grid md:grid-cols-2 gap-x-8 gap-y-14">
+            <AnnotatedMockup
               caption="Envelope budget"
-              hint="Zero-based budgeting with rollover, transfers, and target tracking. Every dollar has a job."
+              hint="Zero-based budgeting with rollover, transfers, and targets."
+              annotation="Rigor"
+              fig="01"
+              body="Every dollar has a job. Targets enforced; overflow visible. Couples can see the same view without renegotiating the math every month."
             >
               <EnvelopeMockup />
-            </Mockup>
-            <Mockup
+            </AnnotatedMockup>
+            <AnnotatedMockup
               caption="Bill pay hub"
-              hint="All recurring obligations in one ledger. Due dates, status, owner — and forecast projection."
+              hint="All recurring obligations in one ledger."
+              annotation="Forecasting"
+              fig="02"
+              body="Due dates, status, owner — and the projection of what's left after every cycle. Catches the subscription that quietly raised its price."
             >
               <BillPayMockup />
-            </Mockup>
-            <Mockup
+            </AnnotatedMockup>
+            <AnnotatedMockup
               caption="AI financial coach"
-              hint="Grounded in your ledger, never generic. Asks specific, answers specific."
+              hint="Grounded in your ledger. Never generic."
+              annotation="AI moment"
+              fig="03"
+              body="The coach reads your specific data — your envelopes, your trends, your goals — and gives advice that earns its keep. Not 'experts say save 20%.'"
             >
               <CoachMockup />
-            </Mockup>
-            <Mockup
+            </AnnotatedMockup>
+            <AnnotatedMockup
               caption="Net worth"
-              hint="All accounts, real-time. Trend lines that show whether you're actually building wealth."
+              hint="All accounts, real-time. The honest line."
+              annotation="Editorial"
+              fig="04"
+              body="One trend line that tells you whether you're actually building wealth. Not pretty, not noisy — just honest."
             >
               <NetWorthMockup />
-            </Mockup>
+            </AnnotatedMockup>
           </div>
         </div>
       </section>
@@ -335,17 +348,28 @@ function AIRow({ n, title, body }) {
   )
 }
 
-function Mockup({ caption, hint, children }) {
+function AnnotatedMockup({ caption, hint, annotation, fig, body, children }) {
   return (
-    <div>
-      <div className="card-gradient-border p-1 aspect-[4/3] overflow-hidden">
-        <div className="w-full h-full rounded-[0.9rem] overflow-hidden bg-obsidian-900">
-          {children}
+    <div className="grid grid-cols-12 gap-4">
+      {/* Mockup frame */}
+      <div className="col-span-12 md:col-span-8">
+        <div className="card-gradient-border p-1 aspect-[4/3] overflow-hidden">
+          <div className="w-full h-full rounded-[0.9rem] overflow-hidden bg-obsidian-900">
+            {children}
+          </div>
+        </div>
+        <div className="mt-3">
+          <div className="font-display text-[15px] tracking-tight text-ink-primary">{caption}</div>
+          <div className="text-[11px] text-ink-tertiary mt-1">{hint}</div>
         </div>
       </div>
-      <div className="mt-4">
-        <div className="font-display text-base text-ink-primary mb-1">{caption}</div>
-        <p className="text-xs text-ink-tertiary leading-relaxed">{hint}</p>
+
+      {/* Magazine-style figure caption */}
+      <div className="col-span-12 md:col-span-4 pt-2 md:pl-3 md:border-l border-white/10">
+        <div className="font-mono text-[9px] uppercase tracking-[0.18em] text-amber-accent mb-2">
+          Fig. {fig} · {annotation}
+        </div>
+        <p className="text-[12px] text-ink-secondary leading-relaxed">{body}</p>
       </div>
     </div>
   )
@@ -374,7 +398,7 @@ function TierCard({ name, positioning, features, featured }) {
 }
 
 // ============================================================
-// COMPARISON TABLE
+// COMPARISON TABLE — Bold: capability heatmap + wins/parity/gaps KPI rail
 // ============================================================
 
 function ComparisonTable() {
@@ -392,48 +416,182 @@ function ComparisonTable() {
     { label: 'Built by a CPA', vals: ['Yes', 'No', 'No', 'No', 'No', 'No'] },
   ]
 
-  const cellClass = (val, isUs) => {
-    if (isUs) return 'text-ink-primary font-medium'
-    if (val === 'Yes' || val === 'Native') return 'text-emerald-300/80'
-    if (val === 'No') return 'text-ink-tertiary'
-    return 'text-ink-secondary'
+  // Special handling: "Sells transaction data" — for ArcaTrust, "No" is the win
+  // (we reverse the sense so it scores as a high capability)
+  const isReversed = (label) => label === 'Sells transaction data'
+
+  const adjustedScore = (label, val) => {
+    const s = score(val)
+    if (isReversed(label)) {
+      // No (best) = 3, Yes (worst) = 0
+      if (val === 'No') return 3
+      if (val === 'Yes') return 0
+    }
+    return s
   }
 
+  // Compute win/parity/gap totals for ArcaTrust vs all competitors combined
+  let arcaWinsTotal = 0, arcaParityTotal = 0, arcaGapsTotal = 0
+  rows.forEach((r) => {
+    const ours = adjustedScore(r.label, r.vals[0])
+    for (let ci = 1; ci < r.vals.length; ci++) {
+      const theirs = adjustedScore(r.label, r.vals[ci])
+      if (ours > theirs) arcaWinsTotal++
+      else if (ours === theirs) arcaParityTotal++
+      else arcaGapsTotal++
+    }
+  })
+
   return (
-    <div className="min-w-[820px]">
-      <div className="grid grid-cols-[2fr_repeat(6,1fr)] gap-px bg-white/5 rounded-2xl overflow-hidden border border-white/5">
-        {/* Header */}
-        <div className="bg-obsidian-800 px-4 py-5 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-tertiary">
-          Capability
-        </div>
+    <div className="min-w-[860px]">
+      {/* KPI rail */}
+      <div className="mb-8 grid grid-cols-3 gap-3 max-w-md ml-auto">
+        <KpiTile n={arcaWinsTotal} label="Wins" tone="win" />
+        <KpiTile n={arcaParityTotal} label="Parity" tone="parity" />
+        <KpiTile n={arcaGapsTotal} label="Gaps" tone="gap" />
+      </div>
+
+      {/* Heatmap */}
+      <div
+        className="grid"
+        style={{
+          gridTemplateColumns: 'minmax(220px, 1.6fr) repeat(6, 1fr)',
+          gap: 4,
+        }}
+      >
+        {/* Header row */}
+        <div />
         {competitors.map((c, i) => (
-          <div
-            key={c}
-            className={`bg-obsidian-800 px-4 py-5 text-sm ${i === 0 ? 'text-ink-primary font-medium' : 'text-ink-secondary'}`}
-          >
-            {c}
+          <div key={c} className="text-center pb-3">
+            <div
+              className={`text-[13px] ${
+                i === 0
+                  ? 'font-display text-ink-primary tracking-tight'
+                  : 'text-ink-secondary'
+              }`}
+            >
+              {c}
+            </div>
+            {i === 0 && (
+              <div className="font-mono text-[9px] uppercase tracking-[0.18em] text-amber-accent mt-0.5">★ Hero</div>
+            )}
           </div>
         ))}
 
         {/* Rows */}
-        {rows.map((row) => (
-          <RowGroup key={row.label} row={row} cellClass={cellClass} />
+        {rows.map((row, ri) => (
+          <RowGroup key={row.label} row={row} index={ri} adjustedScore={adjustedScore} />
         ))}
+      </div>
+
+      {/* Legend */}
+      <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[10px] uppercase tracking-[0.16em] text-ink-tertiary">
+        <span>Cell intensity = capability depth</span>
+        <span className="flex items-center gap-1.5"><HeatSwatch v={0} /> absent</span>
+        <span className="flex items-center gap-1.5"><HeatSwatch v={1} /> limited</span>
+        <span className="flex items-center gap-1.5"><HeatSwatch v={2} /> standard</span>
+        <span className="flex items-center gap-1.5"><HeatSwatch v={3} /> native</span>
       </div>
     </div>
   )
 }
 
-function RowGroup({ row, cellClass }) {
+// 0 = absent, 1 = limited/basic, 2 = present, 3 = native/best
+function score(v) {
+  const s = String(v).toLowerCase()
+  if (['no'].includes(s)) return 0
+  if (['limited', 'basic', 'add-on'].some((k) => s === k)) return 1
+  if (['yes'].some((k) => s === k)) return 2
+  if (['native'].includes(s)) return 3
+  return 2
+}
+
+function RowGroup({ row, index, adjustedScore }) {
   return (
     <>
-      <div className="bg-obsidian-800 px-4 py-4 text-sm text-ink-secondary">{row.label}</div>
-      {row.vals.map((v, i) => (
-        <div key={i} className={`bg-obsidian-800 px-4 py-4 text-sm ${cellClass(v, i === 0)}`}>
-          {v}
-        </div>
-      ))}
+      <div className="flex items-center pr-3" style={{ minHeight: 48 }}>
+        <span className="font-mono text-[10px] text-ink-tertiary mr-3" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          {String(index + 1).padStart(2, '0')}
+        </span>
+        <span className="text-[13px] text-ink-primary tracking-tight">{row.label}</span>
+      </div>
+      {row.vals.map((v, ci) => {
+        const s = adjustedScore(row.label, v)
+        return <HeatCell key={ci} score={s} value={v} hero={ci === 0} />
+      })}
     </>
+  )
+}
+
+function HeatCell({ score, value, hero }) {
+  // Hero column uses the gradient family; competitors use neutral white-alpha.
+  const heroBg = [
+    'rgba(255,255,255,.02)',
+    'linear-gradient(135deg, rgba(232,176,76,.18), rgba(79,125,255,.10))',
+    'linear-gradient(135deg, rgba(232,176,76,.32), rgba(79,125,255,.18))',
+    'linear-gradient(135deg, rgba(232,176,76,.55), rgba(79,125,255,.42))',
+  ][score]
+  const neutralBg = [
+    'rgba(255,255,255,.02)',
+    'rgba(255,255,255,.07)',
+    'rgba(255,255,255,.14)',
+    'rgba(255,255,255,.24)',
+  ][score]
+  const bg = hero ? heroBg : neutralBg
+  const text = hero ? 'text-ink-primary' : score >= 2 ? 'text-ink-primary' : 'text-ink-tertiary'
+  const border = hero ? '1px solid rgba(232,176,76,.25)' : '1px solid rgba(255,255,255,.05)'
+
+  return (
+    <div
+      className={`flex items-center justify-center text-[11px] font-mono uppercase tracking-[0.14em] ${text}`}
+      style={{
+        background: bg,
+        border,
+        borderRadius: 6,
+        minHeight: 48,
+        padding: '0 8px',
+        textAlign: 'center',
+        fontVariantNumeric: 'tabular-nums',
+      }}
+    >
+      {value}
+    </div>
+  )
+}
+
+function HeatSwatch({ v }) {
+  const bg = [
+    'rgba(255,255,255,.04)',
+    'rgba(255,255,255,.10)',
+    'rgba(255,255,255,.20)',
+    'rgba(255,255,255,.36)',
+  ][v]
+  return (
+    <span
+      style={{
+        display: 'inline-block',
+        width: 14,
+        height: 14,
+        borderRadius: 3,
+        background: bg,
+        border: '1px solid rgba(255,255,255,.08)',
+      }}
+    />
+  )
+}
+
+function KpiTile({ n, label, tone }) {
+  const color =
+    tone === 'win' ? 'text-emerald-300' :
+    tone === 'gap' ? 'text-amber-accent' :
+    'text-ink-secondary'
+  return (
+    <div className="bg-obsidian-800/60 border border-white/5 rounded-lg px-4 py-3">
+      <div className={`font-display text-3xl tracking-tight ${color}`} style={{ fontVariantNumeric: 'tabular-nums' }}>
+        {n}
+      </div>
+      <div className="font-mono text-[9px] uppercase tracking-[0.18em] text-ink-tertiary mt-1">{label}</div>
+    </div>
   )
 }
 

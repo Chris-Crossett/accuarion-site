@@ -4,46 +4,68 @@ export default function Home() {
   return (
     <div>
       {/* ============================================================ */}
-      {/* HERO */}
+      {/* HERO — Refined: split layout, type left, ledger artifact right */}
       {/* ============================================================ */}
       <section className="relative pt-40 md:pt-52 pb-24 md:pb-32">
         <div className="container-accu">
-          {/* Eyebrow index row — editorial magazine feel */}
-          <div className="flex items-center justify-between mb-10 reveal" style={{ animationDelay: '0ms' }}>
-            <div className="eyebrow">Accuarion / 01</div>
-            <div className="eyebrow hidden sm:block">Est. Utah · 2024</div>
+          <div className="grid md:grid-cols-12 gap-10 lg:gap-12 items-center">
+            {/* LEFT — type column */}
+            <div className="md:col-span-7">
+              {/* Eyebrow row */}
+              <div className="flex items-center justify-between mb-8 reveal" style={{ animationDelay: '0ms' }}>
+                <div className="eyebrow">Accuarion / 01</div>
+                <div className="eyebrow hidden sm:block">Est. Utah · 2024</div>
+              </div>
+
+              {/* Headline */}
+              <h1
+                className="hl-xl reveal"
+                style={{ animationDelay: '100ms', maxWidth: '13ch' }}
+              >
+                Financial software, <span className="grad-text italic font-display">built right.</span>
+              </h1>
+
+              {/* Subhead */}
+              <p className="body-lg mt-8 max-w-xl reveal" style={{ animationDelay: '280ms' }}>
+                Twenty-five years of CPA, FP&amp;A, and ERP implementation. Compounded with AI that earns its keep —
+                embedded in the workflows where humans need it, audit-traceable everywhere else.
+              </p>
+
+              {/* CTA row */}
+              <div className="mt-12 flex flex-col sm:flex-row gap-4 reveal" style={{ animationDelay: '420ms' }}>
+                <Link to="/products" className="btn-primary">
+                  See the products
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <path d="M5 12h14m-6-6 6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </Link>
+                <Link to="/about" className="btn-ghost">
+                  Read the backstory
+                </Link>
+              </div>
+
+              {/* Credibility rule — single line of mono */}
+              <div className="mt-16 reveal" style={{ animationDelay: '560ms' }}>
+                <div className="h-px bg-gradient-to-r from-white/10 to-white/[0.02] mb-5" />
+                <div className="flex flex-wrap items-center gap-x-8 gap-y-3 font-mono text-[11px] uppercase tracking-[0.18em] text-ink-tertiary">
+                  <span><span className="text-ink-primary">25 yrs</span> · operator experience</span>
+                  <span><span className="text-emerald-300">●</span> ArcaERP live</span>
+                  <span><span className="text-amber-accent">◐</span> ArcaTrust Q2 ’26</span>
+                  <span>Solo-founded · customer-funded</span>
+                </div>
+              </div>
+            </div>
+
+            {/* RIGHT — ledger artifact */}
+            <div className="md:col-span-5 reveal" style={{ animationDelay: '600ms' }}>
+              <LedgerArtifact />
+            </div>
           </div>
-
-          {/* Headline */}
-          <h1 className="hl-xl max-w-4xl reveal" style={{ animationDelay: '100ms' }}>
-            AI-native <span className="grad-text italic font-display">financial software</span>, built by finance pros.
-          </h1>
-
-          {/* Subhead */}
-          <p className="body-lg mt-8 max-w-2xl reveal" style={{ animationDelay: '280ms' }}>
-            Most fintech is built by engineers who learned accounting. We built ours the other way around — 25 years of CPA, FP&A, and ERP implementation first, AI-native software second.
-          </p>
-
-          {/* CTA row */}
-          <div className="mt-12 flex flex-col sm:flex-row gap-4 reveal" style={{ animationDelay: '420ms' }}>
-            <Link to="/products" className="btn-primary">
-              See the products
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><path d="M5 12h14m-6-6 6 6-6 6" strokeLinecap="round" strokeLinejoin="round" /></svg>
-            </Link>
-            <Link to="/about" className="btn-ghost">
-              Read the backstory
-            </Link>
-          </div>
-        </div>
-
-        {/* Hero ambient decoration — spectral bar chart (bespoke SVG) */}
-        <div className="container-accu mt-20 md:mt-28 reveal" style={{ animationDelay: '600ms' }}>
-          <SpectralChart />
         </div>
       </section>
 
       {/* ============================================================ */}
-      {/* POSITIONING — three-column value strip */}
+      {/* POSITIONING — three-column value strip                         */}
       {/* ============================================================ */}
       <section className="py-24 md:py-32">
         <div className="container-accu">
@@ -68,7 +90,7 @@ export default function Home() {
       </section>
 
       {/* ============================================================ */}
-      {/* PRODUCTS SHOWCASE */}
+      {/* PRODUCTS SHOWCASE                                              */}
       {/* ============================================================ */}
       <section className="py-24">
         <div className="container-accu">
@@ -161,53 +183,90 @@ function ProductCard({ name, status, statusColor, blurb, cta, href, external, ac
   )
 }
 
-// Bespoke "spectral" bar chart — conveys data + AI without being literal
-function SpectralChart() {
-  const bars = [
-    { h: 58, label: "01", hue: 210 },
-    { h: 38, label: "02", hue: 215 },
-    { h: 72, label: "03", hue: 220 },
-    { h: 46, label: "04", hue: 225 },
-    { h: 84, label: "05", hue: 232 },
-    { h: 62, label: "06", hue: 238 },
-    { h: 94, label: "07", hue: 34 },   // amber accent column
-    { h: 70, label: "08", hue: 238 },
-    { h: 52, label: "09", hue: 244 },
-    { h: 78, label: "10", hue: 248 },
-    { h: 42, label: "11", hue: 252 },
-    { h: 64, label: "12", hue: 256 },
-  ]
+// ----------------------------------------------------------------
+// LEDGER ARTIFACT — the hero's right column
+// A stylized journal entry with an AI anomaly callout. Renders the
+// entire pitch in one frame: operator rigor + AI that earns its keep
+// + audit trail.
+// ----------------------------------------------------------------
 
+function LedgerArtifact() {
   return (
-    <div className="relative">
-      <div className="flex items-end justify-between gap-2 md:gap-3 h-56 md:h-72 border-b border-white/10 pb-4">
-        {bars.map((b, i) => {
-          const saturation = b.hue > 200 && b.hue < 260 ? '70%' : '65%'
-          const lightness = b.hue > 200 && b.hue < 260 ? '65%' : '60%'
-          return (
-            <div
-              key={i}
-              className="flex-1 flex flex-col justify-end items-center group"
-            >
-              <div
-                className="w-full rounded-t-sm transition-all duration-500 ease-out group-hover:opacity-80"
-                style={{
-                  height: `${b.h}%`,
-                  background: `linear-gradient(180deg, hsl(${b.hue}, ${saturation}, ${lightness}) 0%, hsl(${b.hue}, ${saturation}, ${lightness === '60%' ? '35%' : '40%'}) 100%)`,
-                  boxShadow: `0 0 18px -4px hsl(${b.hue}, ${saturation}, ${lightness}, 0.4)`,
-                  animation: `fadeUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) ${i * 60}ms forwards`,
-                  opacity: 0,
-                }}
-              />
-              <div className="mt-2 font-mono text-[10px] text-ink-tertiary">{b.label}</div>
+    <div className="card-gradient-border p-5">
+      <div className="rounded-[0.85rem] bg-obsidian-900/80 backdrop-blur-sm overflow-hidden">
+
+        {/* Header bar */}
+        <div className="flex items-center justify-between px-5 py-3 border-b border-white/5">
+          <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-tertiary">
+            <span>Journal entry</span>
+            <span className="text-ink-tertiary/50">/</span>
+            <span className="text-ink-secondary">JE-2026-04-1183</span>
+          </div>
+          <div className="font-mono text-[10px] text-ink-tertiary">Apr 30, 2026</div>
+        </div>
+
+        {/* Entry rows — tabular numerals */}
+        <div className="px-5 py-4 space-y-2.5" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          <JERow account="6210 · Marketing — Events" debit="48,250.00" />
+          <JERow account="2110 · Accounts Payable" credit="48,250.00" />
+          <div className="h-px bg-white/5 my-1" />
+          <div className="flex justify-between font-mono text-[11px] text-ink-tertiary">
+            <span>Memo: Q2 conference sponsorship — Stripe Sessions</span>
+            <span>USD</span>
+          </div>
+        </div>
+
+        {/* AI callout — the moment */}
+        <div className="mx-5 my-4 rounded-lg border border-amber-accent/30 bg-amber-accent/[0.06] p-4">
+          <div className="flex items-start gap-3">
+            <div className="shrink-0 w-7 h-7 rounded-full border border-amber-accent/40 bg-amber-accent/10 flex items-center justify-center">
+              <span className="font-mono text-[11px] font-semibold text-amber-accent">!</span>
             </div>
-          )
-        })}
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between mb-1.5 gap-2">
+                <div className="font-mono text-[10px] uppercase tracking-[0.18em] text-amber-accent">
+                  Anomaly · 87% confidence
+                </div>
+                <div className="font-mono text-[10px] text-ink-tertiary whitespace-nowrap">model v3.2 · per-tenant</div>
+              </div>
+              <div className="text-[13px] text-ink-primary leading-relaxed">
+                Amount is 3.4× the trailing 12-month median for account <span style={{ fontVariantNumeric: 'tabular-nums' }}>6210</span>.
+              </div>
+              <div className="mt-1 text-[12px] text-ink-secondary leading-relaxed">
+                Three similar entries in March cleared at $11–14k. Vendor and memo also new this fiscal year.
+              </div>
+              <div className="mt-3 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.16em]">
+                <button className="px-2.5 py-1 rounded-full border border-emerald-400/30 bg-emerald-400/10 text-emerald-300">Approve</button>
+                <button className="px-2.5 py-1 rounded-full border border-white/10 bg-white/[0.03] text-ink-secondary">Open in audit log</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer trace — auditable by default */}
+        <div className="px-5 py-2.5 border-t border-white/5 flex items-center justify-between font-mono text-[10px] text-ink-tertiary">
+          <span>Traceable: inputs · model · prompt · threshold</span>
+          <span className="text-ink-secondary/70">↳ audit-log</span>
+        </div>
       </div>
-      <div className="flex items-center justify-between mt-3 text-[10px] font-mono text-ink-tertiary uppercase tracking-[0.18em]">
-        <span>Signal Density</span>
-        <span>n = 12 · sampled</span>
+
+      <div className="mt-3 px-1 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-tertiary">
+        Live · ArcaERP · Anomaly detection
       </div>
+    </div>
+  )
+}
+
+function JERow({ account, debit, credit }) {
+  return (
+    <div className="grid grid-cols-[1fr_auto_auto] gap-6 items-baseline text-[13px]">
+      <span className="text-ink-secondary truncate">{account}</span>
+      <span className="text-ink-primary text-right w-24">
+        {debit ?? <span className="text-ink-tertiary/50">—</span>}
+      </span>
+      <span className="text-ink-primary text-right w-24">
+        {credit ?? <span className="text-ink-tertiary/50">—</span>}
+      </span>
     </div>
   )
 }

@@ -153,40 +153,53 @@ export default function ArcaERP() {
       </section>
 
       {/* ============================================================ */}
-      {/* PRODUCT TOUR — STYLIZED MOCKUPS                                */}
+      {/* PRODUCT TOUR — Refined: realistic mockups w/ magazine captions */}
       {/* ============================================================ */}
       <section className="py-24">
         <div className="container-accu">
           <div className="mb-16 max-w-2xl">
-            <div className="eyebrow mb-4">Product tour</div>
+            <div className="eyebrow mb-4">Product tour · Annotated</div>
             <h2 className="hl-lg">A look <span className="italic">inside.</span></h2>
+            <p className="body-lg mt-6">Each frame, with a note on where the AI earns its keep.</p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            <Mockup
-              caption="Dashboard"
-              hint="Real-time KPIs across cash, AR aging, MRR, and burn — with anomaly callouts surfaced inline."
+          <div className="grid md:grid-cols-2 gap-x-8 gap-y-14">
+            <AnnotatedMockup
+              caption="Dashboard · Q1 close"
+              hint="Live KPIs surface anomaly callouts inline."
+              annotation="AI moment"
+              fig="01"
+              body="Inline flag points to two GL entries that deviated from per-account norms — surfaced before the trial balance is signed."
             >
               <DashboardMockup />
-            </Mockup>
-            <Mockup
+            </AnnotatedMockup>
+            <AnnotatedMockup
               caption="Bank reconciliation"
-              hint="AI-ranked match candidates with confidence scoring. One click to accept, one click to teach."
+              hint="AI-ranked match candidates with confidence."
+              annotation="AI moment"
+              fig="02"
+              body="Match candidates ranked by per-tenant confidence. The ones below threshold show their reasoning so the human can correct the model."
             >
               <ReconciliationMockup />
-            </Mockup>
-            <Mockup
-              caption="Anomaly detection"
-              hint="Journal entries flagged for review with the model's reasoning visible — not a black box."
+            </AnnotatedMockup>
+            <AnnotatedMockup
+              caption="Anomaly · GL review"
+              hint="The full reasoning chain, no black box."
+              annotation="AI moment"
+              fig="03"
+              body="Flag is auditable: model version, threshold, and the specific inputs (vendor history, account median, posting cycle) that triggered it."
             >
               <AnomalyMockup />
-            </Mockup>
-            <Mockup
-              caption="Financial reporting"
-              hint="84+ pre-built reports across GL, AR/AP, EPM, payroll, and consolidations. Drill down to source."
+            </AnnotatedMockup>
+            <AnnotatedMockup
+              caption="Reports · P&L variance"
+              hint="84+ pre-built. Drill from total to source."
+              annotation="Editorial"
+              fig="04"
+              body="Variance lit by direction, not severity. Investors and operators read the same view; AI narratives draft from the same delta map."
             >
               <ReportsMockup />
-            </Mockup>
+            </AnnotatedMockup>
           </div>
         </div>
       </section>
@@ -347,17 +360,28 @@ function AIRow({ n, title, body }) {
   )
 }
 
-function Mockup({ caption, hint, children }) {
+function AnnotatedMockup({ caption, hint, annotation, fig, body, children }) {
   return (
-    <div>
-      <div className="card-gradient-border p-1 aspect-[4/3] overflow-hidden">
-        <div className="w-full h-full rounded-[0.9rem] overflow-hidden bg-obsidian-900">
-          {children}
+    <div className="grid grid-cols-12 gap-4">
+      {/* Mockup frame */}
+      <div className="col-span-12 md:col-span-8">
+        <div className="card-gradient-border p-1 aspect-[4/3] overflow-hidden">
+          <div className="w-full h-full rounded-[0.9rem] overflow-hidden bg-obsidian-900">
+            {children}
+          </div>
+        </div>
+        <div className="mt-3">
+          <div className="font-display text-[15px] tracking-tight text-ink-primary">{caption}</div>
+          <div className="text-[11px] text-ink-tertiary mt-1">{hint}</div>
         </div>
       </div>
-      <div className="mt-4">
-        <div className="font-display text-base text-ink-primary mb-1">{caption}</div>
-        <p className="text-xs text-ink-tertiary leading-relaxed">{hint}</p>
+
+      {/* Magazine-style figure caption */}
+      <div className="col-span-12 md:col-span-4 pt-2 md:pl-3 md:border-l border-white/10">
+        <div className="font-mono text-[9px] uppercase tracking-[0.18em] text-amber-accent mb-2">
+          Fig. {fig} · {annotation}
+        </div>
+        <p className="text-[12px] text-ink-secondary leading-relaxed">{body}</p>
       </div>
     </div>
   )
@@ -386,7 +410,7 @@ function TierCard({ name, positioning, features, featured }) {
 }
 
 // ============================================================
-// COMPARISON TABLE
+// COMPARISON TABLE — Bold: capability heatmap + wins/parity/gaps KPI rail
 // ============================================================
 
 function ComparisonTable() {
@@ -404,236 +428,358 @@ function ComparisonTable() {
     { label: 'Source-available', vals: ['Roadmap', 'No', 'No', 'No', 'No'] },
   ]
 
-  const cellClass = (val, isUs) => {
-    if (isUs) return 'text-ink-primary font-medium'
-    if (val === 'Yes' || val === 'Native') return 'text-emerald-300/80'
-    if (val === 'No') return 'text-ink-tertiary'
-    return 'text-ink-secondary'
-  }
+  // Compute win / parity / gap totals for ArcaERP vs all competitors combined
+  let arcaWinsTotal = 0, arcaParityTotal = 0, arcaGapsTotal = 0
+  rows.forEach((r) => {
+    const ours = score(r.vals[0])
+    for (let ci = 1; ci < r.vals.length; ci++) {
+      const theirs = score(r.vals[ci])
+      if (ours > theirs) arcaWinsTotal++
+      else if (ours === theirs) arcaParityTotal++
+      else arcaGapsTotal++
+    }
+  })
 
   return (
-    <div className="min-w-[720px]">
-      <div className="grid grid-cols-[2fr_repeat(5,1fr)] gap-px bg-white/5 rounded-2xl overflow-hidden border border-white/5">
-        {/* Header */}
-        <div className="bg-obsidian-800 px-5 py-5 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-tertiary">
-          Capability
-        </div>
+    <div className="min-w-[760px]">
+      {/* KPI rail */}
+      <div className="mb-8 grid grid-cols-3 gap-3 max-w-md ml-auto">
+        <KpiTile n={arcaWinsTotal} label="Wins" tone="win" />
+        <KpiTile n={arcaParityTotal} label="Parity" tone="parity" />
+        <KpiTile n={arcaGapsTotal} label="Gaps" tone="gap" />
+      </div>
+
+      {/* Heatmap */}
+      <div
+        className="grid"
+        style={{
+          gridTemplateColumns: 'minmax(220px, 1.6fr) repeat(5, 1fr)',
+          gap: 4,
+        }}
+      >
+        {/* Header row */}
+        <div />
         {competitors.map((c, i) => (
-          <div
-            key={c}
-            className={`bg-obsidian-800 px-5 py-5 text-sm ${i === 0 ? 'text-ink-primary font-medium' : 'text-ink-secondary'}`}
-          >
-            {c}
+          <div key={c} className="text-center pb-3">
+            <div
+              className={`text-[13px] ${
+                i === 0
+                  ? 'font-display text-ink-primary tracking-tight'
+                  : 'text-ink-secondary'
+              }`}
+            >
+              {c}
+            </div>
+            {i === 0 && (
+              <div className="font-mono text-[9px] uppercase tracking-[0.18em] text-amber-accent mt-0.5">★ Hero</div>
+            )}
           </div>
         ))}
 
         {/* Rows */}
-        {rows.map((row) => (
-          <RowGroup key={row.label} row={row} cellClass={cellClass} />
+        {rows.map((row, ri) => (
+          <RowGroup key={row.label} row={row} index={ri} />
+        ))}
+      </div>
+
+      {/* Legend */}
+      <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[10px] uppercase tracking-[0.16em] text-ink-tertiary">
+        <span>Cell intensity = capability depth</span>
+        <span className="flex items-center gap-1.5"><HeatSwatch v={0} /> absent</span>
+        <span className="flex items-center gap-1.5"><HeatSwatch v={1} /> limited</span>
+        <span className="flex items-center gap-1.5"><HeatSwatch v={2} /> standard</span>
+        <span className="flex items-center gap-1.5"><HeatSwatch v={3} /> native</span>
+      </div>
+    </div>
+  )
+}
+
+// 0 = absent, 1 = limited/basic, 2 = present, 3 = native/best
+function score(v) {
+  const s = String(v).toLowerCase()
+  if (['no'].includes(s)) return 0
+  if (['limited', 'basic', 'add-on', 'apps', 'months', 'weeks–months', '$$$$', '$$$'].some((k) => s === k)) return 1
+  if (['yes', 'hours', 'days', '$$', 'roadmap'].some((k) => s === k)) return 2
+  if (['native'].includes(s) || s.includes('native') || s === '$') return 3
+  return 2
+}
+
+function RowGroup({ row, index }) {
+  return (
+    <>
+      <div className="flex items-center pr-3" style={{ minHeight: 48 }}>
+        <span className="font-mono text-[10px] text-ink-tertiary mr-3" style={{ fontVariantNumeric: 'tabular-nums' }}>
+          {String(index + 1).padStart(2, '0')}
+        </span>
+        <span className="text-[13px] text-ink-primary tracking-tight">{row.label}</span>
+      </div>
+      {row.vals.map((v, ci) => {
+        const s = score(v)
+        return <HeatCell key={ci} score={s} value={v} hero={ci === 0} />
+      })}
+    </>
+  )
+}
+
+function HeatCell({ score, value, hero }) {
+  // Hero column uses the gradient family; competitors use neutral white-alpha.
+  const heroBg = [
+    'rgba(255,255,255,.02)',
+    'linear-gradient(135deg, rgba(79,125,255,.18), rgba(232,176,76,.10))',
+    'linear-gradient(135deg, rgba(79,125,255,.32), rgba(232,176,76,.18))',
+    'linear-gradient(135deg, rgba(79,125,255,.55), rgba(232,176,76,.42))',
+  ][score]
+  const neutralBg = [
+    'rgba(255,255,255,.02)',
+    'rgba(255,255,255,.07)',
+    'rgba(255,255,255,.14)',
+    'rgba(255,255,255,.24)',
+  ][score]
+  const bg = hero ? heroBg : neutralBg
+  const text = hero ? 'text-ink-primary' : score >= 2 ? 'text-ink-primary' : 'text-ink-tertiary'
+  const border = hero ? '1px solid rgba(232,176,76,.25)' : '1px solid rgba(255,255,255,.05)'
+
+  return (
+    <div
+      className={`flex items-center justify-center text-[11px] font-mono uppercase tracking-[0.14em] ${text}`}
+      style={{
+        background: bg,
+        border,
+        borderRadius: 6,
+        minHeight: 48,
+        padding: '0 8px',
+        textAlign: 'center',
+        fontVariantNumeric: 'tabular-nums',
+      }}
+    >
+      {value}
+    </div>
+  )
+}
+
+function HeatSwatch({ v }) {
+  const bg = [
+    'rgba(255,255,255,.04)',
+    'rgba(255,255,255,.10)',
+    'rgba(255,255,255,.20)',
+    'rgba(255,255,255,.36)',
+  ][v]
+  return (
+    <span
+      style={{
+        display: 'inline-block',
+        width: 14,
+        height: 14,
+        borderRadius: 3,
+        background: bg,
+        border: '1px solid rgba(255,255,255,.08)',
+      }}
+    />
+  )
+}
+
+function KpiTile({ n, label, tone }) {
+  const color =
+    tone === 'win' ? 'text-emerald-300' :
+    tone === 'gap' ? 'text-amber-accent' :
+    'text-ink-secondary'
+  return (
+    <div className="bg-obsidian-800/60 border border-white/5 rounded-lg px-4 py-3">
+      <div className={`font-display text-3xl tracking-tight ${color}`} style={{ fontVariantNumeric: 'tabular-nums' }}>
+        {n}
+      </div>
+      <div className="font-mono text-[9px] uppercase tracking-[0.18em] text-ink-tertiary mt-1">{label}</div>
+    </div>
+  )
+}
+
+// ============================================================
+// REALISTIC PRODUCT MOCKUPS — stylized but specific (real-looking accounts and numbers)
+// ============================================================
+
+function DashboardMockup() {
+  return (
+    <div className="w-full h-full p-4 text-ink-primary" style={{ background: '#0F0F18', fontVariantNumeric: 'tabular-nums' }}>
+      {/* Header */}
+      <div className="flex items-center justify-between mb-3">
+        <div>
+          <div className="font-mono text-[8px] uppercase tracking-[0.18em] text-ink-tertiary">Acme Holdings · Consolidated</div>
+          <div className="font-display text-[13px] tracking-tight">CFO dashboard</div>
+        </div>
+        <div className="font-mono text-[8px] text-ink-tertiary">Apr 30, 2026</div>
+      </div>
+      {/* KPI row */}
+      <div className="grid grid-cols-4 gap-1.5 mb-3">
+        <Kpi label="Cash" v="$4.82M" delta="+6.1%" pos />
+        <Kpi label="AR > 60d" v="$184k" delta="−12%" pos />
+        <Kpi label="MRR" v="$612k" delta="+3.4%" pos />
+        <Kpi label="Burn" v="$298k" delta="+2.1%" warn />
+      </div>
+      {/* Chart */}
+      <div className="rounded-md border border-white/5 p-2.5 mb-2.5" style={{ background: '#11111A' }}>
+        <div className="flex items-center justify-between mb-2">
+          <div className="font-mono text-[8px] uppercase tracking-[0.18em] text-ink-tertiary">Cash + MRR · trailing 12mo</div>
+          <div className="flex gap-1.5 font-mono text-[7px] uppercase tracking-[0.16em] text-ink-tertiary">
+            <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full" style={{ background: '#4F7DFF' }} />Cash</span>
+            <span className="flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full" style={{ background: '#E8B04C' }} />MRR</span>
+          </div>
+        </div>
+        <svg viewBox="0 0 320 80" className="w-full" style={{ height: 80 }}>
+          <defs>
+            <linearGradient id="dsArea" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#4F7DFF" stopOpacity=".35" />
+              <stop offset="100%" stopColor="#4F7DFF" stopOpacity="0" />
+            </linearGradient>
+          </defs>
+          <path d="M0 64 L26 60 L52 56 L78 50 L104 52 L130 44 L156 38 L182 36 L208 28 L234 24 L260 20 L286 16 L320 12 L320 80 L0 80 Z" fill="url(#dsArea)" />
+          <path d="M0 64 L26 60 L52 56 L78 50 L104 52 L130 44 L156 38 L182 36 L208 28 L234 24 L260 20 L286 16 L320 12" fill="none" stroke="#4F7DFF" strokeWidth="1.2" />
+          <path d="M0 70 L26 68 L52 66 L78 60 L104 62 L130 56 L156 52 L182 48 L208 44 L234 40 L260 36 L286 32 L320 28" fill="none" stroke="#E8B04C" strokeWidth="1.2" />
+        </svg>
+      </div>
+      {/* Anomaly inline */}
+      <div className="rounded-md border border-amber-accent/30 px-2.5 py-2 flex items-center gap-2.5" style={{ background: 'rgba(232,176,76,.05)' }}>
+        <span className="w-4 h-4 rounded-full bg-amber-accent/15 border border-amber-accent/40 flex items-center justify-center font-mono text-[8px] text-amber-accent font-bold">!</span>
+        <div className="flex-1 text-[10px] text-ink-secondary leading-snug">
+          <span className="text-ink-primary">2 GL entries</span> flagged · <span className="font-mono text-ink-tertiary">JE-1183, JE-1187</span>
+        </div>
+        <div className="font-mono text-[8px] uppercase tracking-[0.16em] text-amber-accent">Review</div>
+      </div>
+    </div>
+  )
+}
+
+function Kpi({ label, v, delta, pos, warn }) {
+  const c = warn ? 'text-amber-accent' : pos ? 'text-emerald-300' : 'text-ink-secondary'
+  return (
+    <div className="rounded-md border border-white/5 px-2.5 py-2" style={{ background: '#11111A' }}>
+      <div className="font-mono text-[8px] uppercase tracking-[0.18em] text-ink-tertiary">{label}</div>
+      <div className="text-[13px] font-display tracking-tight mt-0.5">{v}</div>
+      <div className={`text-[9px] font-mono mt-0.5 ${c}`}>{delta}</div>
+    </div>
+  )
+}
+
+function ReconciliationMockup() {
+  const rows = [
+    { bank: 'STRIPE PAYOUT', ledger: 'AR · Stripe clearing', amt: '$12,486.10', state: 'auto', conf: 99 },
+    { bank: 'ACH · NW WHOLESALE', ledger: 'AR · 6724 NW Wholesale', amt: '$4,200.00', state: 'auto', conf: 96 },
+    { bank: 'CHECK 4188', ledger: 'AR · Briggs & Co.', amt: '$1,850.00 · split', state: 'ai', conf: 87 },
+    { bank: 'ACH · UNKNOWN', ledger: 'Unmatched · 2 candidates', amt: '$732.40', state: 'ai', conf: 71 },
+  ]
+  return (
+    <div className="w-full h-full p-4 text-ink-primary" style={{ background: '#0F0F18', fontVariantNumeric: 'tabular-nums' }}>
+      <div className="flex items-center justify-between mb-3">
+        <div>
+          <div className="font-mono text-[8px] uppercase tracking-[0.18em] text-ink-tertiary">Bank rec · Operating · Apr 28</div>
+          <div className="font-display text-[13px] tracking-tight">First Citizens · 4827</div>
+        </div>
+        <div className="font-mono text-[8px] text-emerald-300">2 auto · 2 suggested</div>
+      </div>
+      <div className="space-y-1.5">
+        {rows.map((r, i) => (
+          <div key={i} className="grid grid-cols-[1fr_auto_1fr_auto] items-center gap-2 rounded-md border border-white/5 px-2.5 py-2" style={{ background: '#11111A' }}>
+            <div>
+              <div className="font-mono text-[9px] text-ink-secondary">{r.bank}</div>
+              <div className="text-[10px] text-ink-tertiary mt-0.5">{r.amt}</div>
+            </div>
+            <div className={`w-5 h-5 rounded-full flex items-center justify-center font-mono text-[8px] font-bold ${
+              r.state === 'auto'
+                ? 'bg-emerald-400/15 text-emerald-300 border border-emerald-400/40'
+                : 'bg-amber-accent/15 text-amber-accent border border-amber-accent/40'
+            }`}>{r.state === 'auto' ? '✓' : '?'}</div>
+            <div className="text-right">
+              <div className="text-[10px] text-ink-primary">{r.ledger}</div>
+              <div className="font-mono text-[8px] text-ink-tertiary mt-0.5">model conf · {r.conf}%</div>
+            </div>
+            <div className="font-mono text-[8px] uppercase tracking-[0.16em] text-ink-tertiary">{r.state === 'auto' ? 'Posted' : 'Suggest'}</div>
+          </div>
         ))}
       </div>
     </div>
   )
 }
 
-function RowGroup({ row, cellClass }) {
-  return (
-    <>
-      <div className="bg-obsidian-800 px-5 py-4 text-sm text-ink-secondary">{row.label}</div>
-      {row.vals.map((v, i) => (
-        <div key={i} className={`bg-obsidian-800 px-5 py-4 text-sm ${cellClass(v, i === 0)}`}>
-          {v}
-        </div>
-      ))}
-    </>
-  )
-}
-
-// ============================================================
-// SVG MOCKUPS — stylized placeholders, swap for real screenshots later
-// ============================================================
-
-function DashboardMockup() {
-  return (
-    <svg viewBox="0 0 400 300" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="dashbar1" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#4F7DFF" stopOpacity="0.9" />
-          <stop offset="100%" stopColor="#4F7DFF" stopOpacity="0.3" />
-        </linearGradient>
-        <linearGradient id="dashbar2" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#E8B04C" stopOpacity="0.9" />
-          <stop offset="100%" stopColor="#E8B04C" stopOpacity="0.3" />
-        </linearGradient>
-      </defs>
-      {/* Header strip */}
-      <rect x="16" y="14" width="80" height="6" rx="3" fill="#A8A9B4" opacity="0.4" />
-      <rect x="16" y="26" width="120" height="10" rx="2" fill="#F5F5F7" opacity="0.85" />
-      {/* KPI cards */}
-      <g>
-        <rect x="16" y="52" width="84" height="50" rx="6" fill="#11111A" stroke="#ffffff" strokeOpacity="0.06" />
-        <rect x="22" y="60" width="36" height="4" rx="2" fill="#6B6C78" />
-        <rect x="22" y="72" width="56" height="10" rx="2" fill="#F5F5F7" opacity="0.9" />
-        <rect x="22" y="88" width="28" height="4" rx="2" fill="#10b981" opacity="0.7" />
-
-        <rect x="108" y="52" width="84" height="50" rx="6" fill="#11111A" stroke="#ffffff" strokeOpacity="0.06" />
-        <rect x="114" y="60" width="36" height="4" rx="2" fill="#6B6C78" />
-        <rect x="114" y="72" width="48" height="10" rx="2" fill="#F5F5F7" opacity="0.9" />
-        <rect x="114" y="88" width="32" height="4" rx="2" fill="#10b981" opacity="0.7" />
-
-        <rect x="200" y="52" width="84" height="50" rx="6" fill="#11111A" stroke="#ffffff" strokeOpacity="0.06" />
-        <rect x="206" y="60" width="36" height="4" rx="2" fill="#6B6C78" />
-        <rect x="206" y="72" width="60" height="10" rx="2" fill="#F5F5F7" opacity="0.9" />
-        <rect x="206" y="88" width="24" height="4" rx="2" fill="#E8B04C" opacity="0.7" />
-
-        <rect x="292" y="52" width="92" height="50" rx="6" fill="#11111A" stroke="#ffffff" strokeOpacity="0.06" />
-        <rect x="298" y="60" width="36" height="4" rx="2" fill="#6B6C78" />
-        <rect x="298" y="72" width="52" height="10" rx="2" fill="#F5F5F7" opacity="0.9" />
-        <rect x="298" y="88" width="20" height="4" rx="2" fill="#10b981" opacity="0.7" />
-      </g>
-      {/* Chart area */}
-      <rect x="16" y="118" width="240" height="166" rx="6" fill="#11111A" stroke="#ffffff" strokeOpacity="0.06" />
-      <rect x="24" y="128" width="80" height="4" rx="2" fill="#6B6C78" />
-      {/* Bars */}
-      {[40, 55, 35, 70, 50, 80, 60, 90, 65, 75].map((h, i) => (
-        <rect key={i} x={28 + i * 22} y={260 - h} width="14" height={h} rx="2" fill={i === 7 ? "url(#dashbar2)" : "url(#dashbar1)"} />
-      ))}
-      {/* Side panel */}
-      <rect x="264" y="118" width="120" height="166" rx="6" fill="#11111A" stroke="#ffffff" strokeOpacity="0.06" />
-      <rect x="272" y="128" width="60" height="4" rx="2" fill="#6B6C78" />
-      <rect x="272" y="144" width="100" height="2" rx="1" fill="#ffffff" opacity="0.05" />
-      {[0,1,2,3,4].map(i => (
-        <g key={i}>
-          <circle cx="278" cy={160 + i * 22} r="3" fill={i === 1 ? "#E8B04C" : "#4F7DFF"} opacity="0.7" />
-          <rect x="288" y={156 + i * 22} width="60" height="3" rx="1.5" fill="#A8A9B4" opacity="0.5" />
-          <rect x="288" y={163 + i * 22} width="40" height="3" rx="1.5" fill="#6B6C78" opacity="0.5" />
-        </g>
-      ))}
-    </svg>
-  )
-}
-
-function ReconciliationMockup() {
-  return (
-    <svg viewBox="0 0 400 300" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-      <rect x="16" y="14" width="100" height="6" rx="3" fill="#A8A9B4" opacity="0.4" />
-      <rect x="16" y="26" width="160" height="10" rx="2" fill="#F5F5F7" opacity="0.85" />
-      {/* Two-column reconciliation */}
-      <text x="24" y="62" fill="#6B6C78" fontSize="9" fontFamily="monospace">BANK</text>
-      <text x="220" y="62" fill="#6B6C78" fontSize="9" fontFamily="monospace">LEDGER</text>
-      {/* Match rows */}
-      {[0, 1, 2, 3].map((i) => {
-        const isAuto = i < 2
-        const matchColor = isAuto ? '#10b981' : '#E8B04C'
-        return (
-          <g key={i}>
-            <rect x="16" y={72 + i * 50} width="170" height="40" rx="4" fill="#11111A" stroke="#ffffff" strokeOpacity="0.06" />
-            <rect x="24" y={82 + i * 50} width="100" height="4" rx="2" fill="#A8A9B4" opacity="0.7" />
-            <rect x="24" y={94 + i * 50} width="60" height="3" rx="1.5" fill="#6B6C78" opacity="0.5" />
-            <rect x="140" y={86 + i * 50} width="38" height="14" rx="3" fill="#F5F5F7" opacity="0.9" />
-
-            {/* Match arrow */}
-            <line x1="190" y1={92 + i * 50} x2="216" y2={92 + i * 50} stroke={matchColor} strokeWidth="1.5" strokeDasharray={isAuto ? "" : "3 2"} />
-            <circle cx="203" cy={92 + i * 50} r="6" fill="#0A0A0F" stroke={matchColor} strokeWidth="1.5" />
-            <text x="203" y={95 + i * 50} fill={matchColor} fontSize="7" fontFamily="monospace" textAnchor="middle" fontWeight="700">
-              {isAuto ? '✓' : '?'}
-            </text>
-
-            <rect x="220" y={72 + i * 50} width="164" height="40" rx="4" fill="#11111A" stroke="#ffffff" strokeOpacity="0.06" />
-            <rect x="228" y={82 + i * 50} width="92" height="4" rx="2" fill="#A8A9B4" opacity="0.7" />
-            <rect x="228" y={94 + i * 50} width="56" height="3" rx="1.5" fill="#6B6C78" opacity="0.5" />
-            <rect x="334" y={86 + i * 50} width="42" height="14" rx="3" fill="#F5F5F7" opacity="0.9" />
-          </g>
-        )
-      })}
-      {/* Confidence chip */}
-      <rect x="16" y="276" width="132" height="14" rx="7" fill="#10b981" opacity="0.12" />
-      <circle cx="26" cy="283" r="3" fill="#10b981" />
-      <text x="34" y="286" fill="#10b981" fontSize="8" fontFamily="monospace" letterSpacing="1">2 AUTO · 2 SUGGESTED</text>
-    </svg>
-  )
-}
-
 function AnomalyMockup() {
   return (
-    <svg viewBox="0 0 400 300" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-      <rect x="16" y="14" width="120" height="6" rx="3" fill="#A8A9B4" opacity="0.4" />
-      <rect x="16" y="26" width="180" height="10" rx="2" fill="#F5F5F7" opacity="0.85" />
-      {/* Journal entry card */}
-      <rect x="16" y="56" width="368" height="100" rx="8" fill="#11111A" stroke="#E8B04C" strokeOpacity="0.4" />
-      <circle cx="32" cy="74" r="6" fill="#E8B04C" opacity="0.2" />
-      <text x="32" y="77" fill="#E8B04C" fontSize="9" fontFamily="monospace" textAnchor="middle" fontWeight="700">!</text>
-      <rect x="46" y="68" width="140" height="6" rx="3" fill="#F5F5F7" opacity="0.9" />
-      <rect x="46" y="80" width="80" height="3" rx="1.5" fill="#6B6C78" />
-
-      {/* Lines of journal entry */}
-      <line x1="32" y1="100" x2="368" y2="100" stroke="#ffffff" strokeOpacity="0.06" />
-      <rect x="32" y="110" width="80" height="3" rx="1.5" fill="#A8A9B4" opacity="0.6" />
-      <rect x="180" y="110" width="40" height="3" rx="1.5" fill="#A8A9B4" opacity="0.6" />
-      <rect x="320" y="110" width="48" height="3" rx="1.5" fill="#F5F5F7" opacity="0.85" />
-      <rect x="32" y="124" width="100" height="3" rx="1.5" fill="#A8A9B4" opacity="0.6" />
-      <rect x="180" y="124" width="40" height="3" rx="1.5" fill="#A8A9B4" opacity="0.6" />
-      <rect x="324" y="124" width="44" height="3" rx="1.5" fill="#F5F5F7" opacity="0.85" />
-      <rect x="32" y="138" width="64" height="3" rx="1.5" fill="#A8A9B4" opacity="0.6" />
-      <rect x="180" y="138" width="40" height="3" rx="1.5" fill="#A8A9B4" opacity="0.6" />
-      <rect x="320" y="138" width="48" height="3" rx="1.5" fill="#F5F5F7" opacity="0.85" />
-
-      {/* Why flagged panel */}
-      <rect x="16" y="176" width="368" height="108" rx="8" fill="#0A0A0F" stroke="#ffffff" strokeOpacity="0.05" />
-      <text x="28" y="196" fill="#6B6C78" fontSize="9" fontFamily="monospace" letterSpacing="1.5">WHY FLAGGED</text>
-      <circle cx="32" cy="218" r="2" fill="#E8B04C" />
-      <rect x="44" y="216" width="280" height="3" rx="1.5" fill="#A8A9B4" opacity="0.7" />
-      <circle cx="32" cy="234" r="2" fill="#E8B04C" />
-      <rect x="44" y="232" width="220" height="3" rx="1.5" fill="#A8A9B4" opacity="0.7" />
-      <circle cx="32" cy="250" r="2" fill="#E8B04C" />
-      <rect x="44" y="248" width="260" height="3" rx="1.5" fill="#A8A9B4" opacity="0.7" />
-      <rect x="28" y="262" width="80" height="14" rx="7" fill="#10b981" opacity="0.15" />
-      <text x="40" y="272" fill="#10b981" fontSize="8" fontFamily="monospace">APPROVE</text>
-      <rect x="116" y="262" width="80" height="14" rx="7" fill="#ffffff" opacity="0.05" />
-      <text x="128" y="272" fill="#A8A9B4" fontSize="8" fontFamily="monospace">REJECT</text>
-    </svg>
+    <div className="w-full h-full p-4 text-ink-primary" style={{ background: '#0F0F18', fontVariantNumeric: 'tabular-nums' }}>
+      <div className="flex items-center justify-between mb-3">
+        <div>
+          <div className="font-mono text-[8px] uppercase tracking-[0.18em] text-amber-accent">Anomaly · GL review</div>
+          <div className="font-display text-[13px] tracking-tight">JE-2026-04-1183 · Marketing — Events</div>
+        </div>
+        <div className="font-mono text-[8px] text-ink-tertiary">Apr 30 · model v3.2</div>
+      </div>
+      {/* Entry */}
+      <div className="rounded-md border border-amber-accent/30 p-2.5 mb-2" style={{ background: 'rgba(232,176,76,.04)' }}>
+        <div className="grid grid-cols-[1fr_auto_auto] gap-3 text-[10px]">
+          <span className="text-ink-secondary">6210 · Marketing — Events</span>
+          <span className="text-ink-primary w-16 text-right">48,250.00</span>
+          <span className="text-ink-tertiary/50 w-16 text-right">—</span>
+        </div>
+        <div className="grid grid-cols-[1fr_auto_auto] gap-3 text-[10px] mt-1">
+          <span className="text-ink-secondary">2110 · Accounts Payable</span>
+          <span className="text-ink-tertiary/50 w-16 text-right">—</span>
+          <span className="text-ink-primary w-16 text-right">48,250.00</span>
+        </div>
+      </div>
+      {/* Why flagged */}
+      <div className="rounded-md border border-white/5 p-2.5 mb-2" style={{ background: '#0A0A0F' }}>
+        <div className="font-mono text-[8px] uppercase tracking-[0.18em] text-ink-tertiary mb-1.5">Why flagged · 87% confidence</div>
+        <div className="space-y-1 text-[10px] text-ink-secondary">
+          <div className="flex gap-2"><span className="text-amber-accent">·</span>3.4× trailing 12-mo median for account 6210</div>
+          <div className="flex gap-2"><span className="text-amber-accent">·</span>Vendor "Stripe Sessions" first appearance this fiscal year</div>
+          <div className="flex gap-2"><span className="text-amber-accent">·</span>Posted off-cycle (28 Apr, normal close 30 Apr)</div>
+        </div>
+      </div>
+      {/* Distribution micro-chart */}
+      <div className="rounded-md border border-white/5 p-2.5" style={{ background: '#11111A' }}>
+        <div className="font-mono text-[8px] uppercase tracking-[0.18em] text-ink-tertiary mb-1.5">Distribution · acct 6210 · ttm</div>
+        <svg viewBox="0 0 280 24" className="w-full" style={{ height: 24 }}>
+          {[8, 12, 11, 14, 10, 13, 9, 11, 12, 14, 10, 9].map((h, i) => (
+            <rect key={i} x={i * 22 + 2} y={24 - h} width="14" height={h} rx="1" fill="#4F7DFF" opacity="0.6" />
+          ))}
+          <rect x="266" y="0" width="14" height="24" rx="1" fill="#E8B04C" />
+        </svg>
+      </div>
+    </div>
   )
 }
 
 function ReportsMockup() {
+  const rows = [
+    { acct: 'Revenue', q1: '$1,840,210', q4: '$1,712,408', d: '+7.5%', pos: true, b: true },
+    { acct: '  Subscription', q1: '$1,624,180', q4: '$1,488,930', d: '+9.1%', pos: true },
+    { acct: '  Services', q1: '$216,030', q4: '$223,478', d: '−3.3%', pos: false },
+    { acct: 'Cost of revenue', q1: '$528,402', q4: '$501,224', d: '+5.4%', pos: false, b: true },
+    { acct: 'Gross profit', q1: '$1,311,808', q4: '$1,211,184', d: '+8.3%', pos: true, b: true },
+    { acct: 'Operating expense', q1: '$884,210', q4: '$842,166', d: '+5.0%', pos: false },
+  ]
   return (
-    <svg viewBox="0 0 400 300" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-      <rect x="16" y="14" width="100" height="6" rx="3" fill="#A8A9B4" opacity="0.4" />
-      <rect x="16" y="26" width="200" height="10" rx="2" fill="#F5F5F7" opacity="0.85" />
-      {/* Tabs */}
-      <rect x="16" y="50" width="64" height="20" rx="4" fill="#4F7DFF" opacity="0.18" />
-      <text x="48" y="64" fill="#93B4FF" fontSize="8" fontFamily="monospace" textAnchor="middle">P&amp;L</text>
-      <rect x="84" y="50" width="64" height="20" rx="4" fill="#ffffff" opacity="0.04" />
-      <text x="116" y="64" fill="#A8A9B4" fontSize="8" fontFamily="monospace" textAnchor="middle">BS</text>
-      <rect x="152" y="50" width="64" height="20" rx="4" fill="#ffffff" opacity="0.04" />
-      <text x="184" y="64" fill="#A8A9B4" fontSize="8" fontFamily="monospace" textAnchor="middle">CASH</text>
-      <rect x="220" y="50" width="64" height="20" rx="4" fill="#ffffff" opacity="0.04" />
-      <text x="252" y="64" fill="#A8A9B4" fontSize="8" fontFamily="monospace" textAnchor="middle">VAR</text>
-
-      {/* Table */}
-      <rect x="16" y="84" width="368" height="200" rx="8" fill="#11111A" stroke="#ffffff" strokeOpacity="0.06" />
-      <line x1="16" y1="106" x2="384" y2="106" stroke="#ffffff" strokeOpacity="0.08" />
-      <text x="28" y="100" fill="#6B6C78" fontSize="8" fontFamily="monospace">ACCOUNT</text>
-      <text x="200" y="100" fill="#6B6C78" fontSize="8" fontFamily="monospace">Q1 2026</text>
-      <text x="260" y="100" fill="#6B6C78" fontSize="8" fontFamily="monospace">Q4 2025</text>
-      <text x="328" y="100" fill="#6B6C78" fontSize="8" fontFamily="monospace">Δ %</text>
-
-      {[
-        { label: 78, indent: 0, q1: 60, q4: 56, delta: 7, deltaColor: '#10b981' },
-        { label: 100, indent: 16, q1: 50, q4: 48, delta: 4, deltaColor: '#10b981' },
-        { label: 110, indent: 16, q1: 56, q4: 50, delta: 12, deltaColor: '#10b981' },
-        { label: 90, indent: 0, q1: 64, q4: 70, delta: -8, deltaColor: '#E8B04C' },
-        { label: 100, indent: 16, q1: 48, q4: 52, delta: -7, deltaColor: '#E8B04C' },
-        { label: 88, indent: 16, q1: 38, q4: 42, delta: -9, deltaColor: '#E8B04C' },
-        { label: 70, indent: 0, q1: 60, q4: 56, delta: 7, deltaColor: '#10b981' },
-      ].map((r, i) => (
-        <g key={i}>
-          <rect x={28 + r.indent} y={120 + i * 22} width={r.label} height="3" rx="1.5" fill={r.indent ? "#A8A9B4" : "#F5F5F7"} opacity={r.indent ? 0.6 : 0.85} />
-          <rect x="200" y={120 + i * 22} width={r.q1} height="3" rx="1.5" fill="#F5F5F7" opacity="0.85" />
-          <rect x="260" y={120 + i * 22} width={r.q4} height="3" rx="1.5" fill="#A8A9B4" opacity="0.7" />
-          <rect x="328" y={119 + i * 22} width={Math.abs(r.delta) * 4} height="5" rx="2.5" fill={r.deltaColor} opacity="0.6" />
-        </g>
-      ))}
-    </svg>
+    <div className="w-full h-full p-4 text-ink-primary" style={{ background: '#0F0F18', fontVariantNumeric: 'tabular-nums' }}>
+      <div className="flex items-center justify-between mb-3">
+        <div>
+          <div className="font-mono text-[8px] uppercase tracking-[0.18em] text-ink-tertiary">P&L · Variance · Q1 vs Q4</div>
+          <div className="font-display text-[13px] tracking-tight">Acme SaaS, Inc.</div>
+        </div>
+        <div className="flex gap-1 font-mono text-[8px] uppercase tracking-[0.18em]">
+          <span className="px-1.5 py-0.5 rounded bg-spectrum-500/15 text-spectrum-300">P&L</span>
+          <span className="px-1.5 py-0.5 rounded text-ink-tertiary">BS</span>
+          <span className="px-1.5 py-0.5 rounded text-ink-tertiary">Cash</span>
+        </div>
+      </div>
+      <div className="rounded-md border border-white/5 overflow-hidden" style={{ background: '#11111A' }}>
+        <div className="grid grid-cols-[2fr_1fr_1fr_0.6fr] px-2.5 py-1.5 font-mono text-[8px] uppercase tracking-[0.18em] text-ink-tertiary border-b border-white/5">
+          <span>Account</span><span className="text-right">Q1 2026</span><span className="text-right">Q4 2025</span><span className="text-right">Δ</span>
+        </div>
+        {rows.map((r, i) => (
+          <div key={i} className={`grid grid-cols-[2fr_1fr_1fr_0.6fr] px-2.5 py-1.5 text-[10px] border-b border-white/5 last:border-b-0 ${r.b ? 'bg-white/[0.02]' : ''}`}>
+            <span className={`${r.b ? 'text-ink-primary font-medium' : 'text-ink-secondary'}`} style={{ whiteSpace: 'pre' }}>{r.acct}</span>
+            <span className="text-right text-ink-primary">{r.q1}</span>
+            <span className="text-right text-ink-tertiary">{r.q4}</span>
+            <span className={`text-right font-mono ${r.pos ? 'text-emerald-300' : 'text-amber-accent'}`}>{r.d}</span>
+          </div>
+        ))}
+      </div>
+    </div>
   )
 }
