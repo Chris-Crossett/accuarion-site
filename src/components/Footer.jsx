@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import Logo from './Logo.jsx'
 
 export default function Footer() {
   return (
@@ -8,15 +9,7 @@ export default function Footer() {
           {/* Brand column */}
           <div className="md:col-span-2 max-w-sm">
             <div className="flex items-center gap-3 mb-4">
-              <svg width="22" height="22" viewBox="0 0 64 64">
-                <defs>
-                  <linearGradient id="footGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#4F7DFF" />
-                    <stop offset="100%" stopColor="#E8B04C" />
-                  </linearGradient>
-                </defs>
-                <path d="M18 48 L32 18 L46 48 M24 39 L40 39" stroke="url(#footGrad)" strokeWidth="3.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+              <Logo size={22} idSuffix="footer" />
               <span className="font-display text-base tracking-tight">Accuarion</span>
             </div>
             <p className="text-sm text-ink-tertiary leading-relaxed">

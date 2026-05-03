@@ -1,5 +1,6 @@
 import { NavLink, Link, useLocation } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
+import Logo from './Logo.jsx'
 
 // Top-level nav links. Products is rendered specially with a dropdown.
 const SIMPLE_LINKS = [
@@ -48,24 +49,12 @@ export default function Nav() {
       <div className="container-accu flex items-center justify-between">
         {/* Monogram + wordmark */}
         <Link to="/" className="group flex items-center gap-3">
-          <svg width="28" height="28" viewBox="0 0 64 64" className="shrink-0">
-            <defs>
-              <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#4F7DFF" />
-                <stop offset="100%" stopColor="#E8B04C" />
-              </linearGradient>
-            </defs>
-            <path
-              d="M18 48 L32 18 L46 48 M24 39 L40 39"
-              stroke="url(#logoGrad)"
-              strokeWidth="3.5"
-              fill="none"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="transition-transform duration-500 group-hover:rotate-[-4deg]"
-              style={{ transformOrigin: 'center' }}
-            />
-          </svg>
+          <Logo
+            size={28}
+            idSuffix="nav"
+            className="transition-transform duration-500 group-hover:rotate-[-4deg]"
+            style={{ transformOrigin: 'center' }}
+          />
           <span className="font-display text-lg tracking-tight text-ink-primary">
             Accuarion
           </span>
