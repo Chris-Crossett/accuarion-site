@@ -29,12 +29,12 @@ export default function Footer() {
             <h4 className="eyebrow mb-4">Products</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a href="https://arcaerp.com" className="text-ink-secondary hover:text-ink-primary transition" target="_blank" rel="noopener noreferrer">
+                <Link to="/products/arcaerp" className="text-ink-secondary hover:text-ink-primary transition">
                   ArcaERP
-                </a>
+                </Link>
               </li>
               <li>
-                <Link to="/products" className="text-ink-secondary hover:text-ink-primary transition">
+                <Link to="/products/arcatrust" className="text-ink-secondary hover:text-ink-primary transition">
                   ArcaTrust
                 </Link>
               </li>

@@ -72,7 +72,7 @@ export default function ArcaTrust() {
             <UseCase
               tag="ICP · 01"
               title="Envelope-method households"
-              body="You believe in giving every dollar a job. Cash envelopes worked, but they don't scale to direct deposit and digital spending. ArcaTrust is the digital version — done right, with the rigor a CPA would demand."
+              body="You believe in giving every dollar a job. Cash envelopes worked, but they don't scale to direct deposit and digital spending. ArcaTrust is the digital version — done right, with the rigor a finance professional would demand."
               tags={['Zero-based', 'Multi-account', 'Couples']}
             />
             <UseCase
@@ -413,7 +413,7 @@ function ComparisonTable() {
     { label: 'Bill pay hub', vals: ['Native', 'Limited', 'Yes', 'Yes', 'Yes', 'Limited'] },
     { label: 'Sells transaction data', vals: ['No', 'No', 'No', 'No', 'Yes', 'No'] },
     { label: 'White-label tier (banks/CUs)', vals: ['Yes', 'No', 'No', 'No', 'No', 'No'] },
-    { label: 'Built by a CPA', vals: ['Yes', 'No', 'No', 'No', 'No', 'No'] },
+    { label: 'Built by a 25-yr finance operator', vals: ['Yes', 'No', 'No', 'No', 'No', 'No'] },
   ]
 
   // Special handling: "Sells transaction data" — for ArcaTrust, "No" is the win

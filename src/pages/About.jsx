@@ -16,7 +16,7 @@ export default function About() {
             <div className="sticky top-32">
               <div className="eyebrow mb-3">The Founder</div>
               <p className="text-ink-primary font-medium mb-2">Chris Crossett</p>
-              <p className="text-sm text-ink-tertiary mb-6">CPA · MBA · Founder</p>
+              <p className="text-sm text-ink-tertiary mb-6">25-yr Finance Operator · MBA · Founder</p>
               <a
                 href="https://www.linkedin.com/in/accuarion/"
                 target="_blank"

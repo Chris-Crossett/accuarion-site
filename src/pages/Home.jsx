@@ -27,7 +27,7 @@ export default function Home() {
 
               {/* Subhead */}
               <p className="body-lg mt-8 max-w-xl reveal" style={{ animationDelay: '280ms' }}>
-                Twenty-five years of CPA, FP&amp;A, and ERP implementation. Compounded with AI that earns its keep —
+                Twenty-five years of accounting, FP&amp;A, and ERP implementation. Compounded with AI that earns its keep —
                 embedded in the workflows where humans need it, audit-traceable everywhere else.
               </p>
 
